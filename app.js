@@ -24,6 +24,7 @@ myApp.controller("mainController", [
             caption: "Net Loss per month for each airline",
             subcaption: "2010-2013",
             xaxisname: "Airlines",
+            labelDisplay: "rotate",
             yaxisname: "Net Loss Per Month $",
             numDivLines: "8",
             yAxisMinValue: "800",
@@ -45,6 +46,10 @@ myApp.controller("mainController", [
             }
           ]
         };
+        // formats data and sends it to graph ready objects
+        let lineList = closeAmountObj;
+        let sortedListLine = sortObject(lineList);
+        enterDataSets(sortedListLine, $scope.lineGraph);
         // calls checkObj to update closeAmountObj close $amounts
         function formatCloseAmount(close, airline) {
           // tempNum replaces all the dollar sign characters and converts it to float num
@@ -68,6 +73,33 @@ myApp.controller("mainController", [
               data[property] = num;
             }
           }
+        }
+        // sorts the object and formats the data to be graph ready
+        function sortObject(obj) {
+          let arr = [];
+          for (const prop in obj) {
+            if (obj.hasOwnProperty(prop)) {
+              arr.push({
+                label: prop,
+                value: obj[prop] / 36
+              });
+            }
+          }
+          // enters graph data takes in sorted chart data
+          function enterDataSets(graph, dataSheet) {
+            for (let i = 0; i < graph.length; i++) {
+              dataSheet.categories[0].category.push({
+                label: graph[i].label
+              });
+              dataSheet.dataset[0].data.push({
+                value: graph[i].value
+              });
+            }
+          }
+          arr.sort(function(a, b) {
+            return a.value - b.value;
+          });
+          return arr;
         }
         $scope.dataLoaded = true;
       });
