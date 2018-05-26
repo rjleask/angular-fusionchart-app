@@ -3,6 +3,7 @@ myApp.controller("mainController", [
   "$scope",
   "$http",
   ($scope, $http) => {
+    $scope.dataLoaded = false;
     $http
       .get(
         "https://spreadsheets.google.com/feeds/list/1t6LE3IqHXOsHUvsoZQagETjMjABzVGaC_nRRjEgqh8s/1/public/values?alt=json"
@@ -10,10 +11,7 @@ myApp.controller("mainController", [
       .success(function(response) {
         console.log(response);
         let data = response.feed.entry;
-        let closeAmountObj = {
-          months: {},
-          averages: {}
-        };
+        let closeAmountObj = {};
 
         for (let i = 0; i < data.length; i++) {
           formatCloseAmount(
@@ -21,8 +19,34 @@ myApp.controller("mainController", [
             data[i].gsx$airlinename.$t
           );
         }
+        $scope.lineGraph = {
+          chart: {
+            caption: "Net Loss per month for each airline",
+            subcaption: "2010-2013",
+            xaxisname: "Airlines",
+            yaxisname: "Net Loss Per Month $",
+            numDivLines: "8",
+            yAxisMinValue: "800",
+            theme: "fint",
+            showDataLoadingMessage: true
+          },
+          categories: [
+            {
+              category: []
+            }
+          ],
+
+          dataset: [
+            {
+              seriesname: "Monthly losses",
+              renderas: "line",
+              showvalues: "0",
+              data: []
+            }
+          ]
+        };
         // calls checkObj to update closeAmountObj close $amounts
-        function formatCloseAmount(close, airline, date) {
+        function formatCloseAmount(close, airline) {
           // tempNum replaces all the dollar sign characters and converts it to float num
           let closeNum = parseFloat(close.replace(/\$|,/g, ""));
           let tempDate = matchDate(date);
@@ -30,7 +54,6 @@ myApp.controller("mainController", [
           let objMonths = closeAmountObj.months;
           if (closeNum !== NaN && closeNum > 0) {
             closeCheckObj(obj, airline, closeNum);
-            fillMonthsCloseObj(objMonths, tempDate, airline, closeNum);
           }
         }
         // checks to see if objProp exists, if it does increment
@@ -46,23 +69,7 @@ myApp.controller("mainController", [
             }
           }
         }
-        // helper function for calculating average monthly values
-        // fills closeAmtObj.months with values for each month
-        function fillMonthsCloseObj(obj, date, airline, closeNum) {
-          if (obj.hasOwnProperty(airline)) {
-            if (obj[airline].hasOwnProperty(date)) {
-              obj[airline][date] += closeNum;
-            } else {
-              obj[airline][date] = closeNum;
-            }
-          } else {
-            let filter = /^[a-zA-Z]/g.test(airline);
-            if (filter) {
-              obj[airline] = {};
-              obj[airline][date] = closeNum;
-            }
-          }
-        }
+        $scope.dataLoaded = true;
       });
   }
 ]);
