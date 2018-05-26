@@ -11,12 +11,22 @@ myApp.controller("mainController", [
       .success(function(response) {
         console.log(response);
         let data = response.feed.entry;
+        // holds data for the bar graph
         let closeAmountObj = {};
+        // holds data for line graph
+        let monthlyClaimsObj = {
+          months: {},
+          averages: {}
+        };
 
         for (let i = 0; i < data.length; i++) {
           formatCloseAmount(
             data[i].gsx$closeamount.$t,
             data[i].gsx$airlinename.$t
+          );
+          countMonthlyClaims(
+            data[i].gsx$airportcode.$t,
+            data[i].gsx$datereceived.$t
           );
         }
         $scope.lineGraph = {
@@ -50,6 +60,41 @@ myApp.controller("mainController", [
         let lineList = closeAmountObj;
         let sortedListLine = sortObject(lineList);
         enterDataSets(sortedListLine, $scope.lineGraph);
+        // ////////////////
+        // function Declarations
+        ///////////////////
+        // recieves input each interation then calls fillMOnthsObj
+        function countMonthlyClaims(aircode, date) {
+          let tempDate = matchDate(date);
+          let x = monthlyClaimsObj;
+          let y = monthlyClaimsObj.months;
+          fillMonthsClaimsObj(y, tempDate, aircode);
+        }
+        function matchDate(date) {
+          // checks date for matching string and returns it in an array
+          let res = date.match(
+            /(Jan)|(Feb)|(Mar)|(Apr)|(May)|(Jun)|(Jul)|(Aug)|(Sep)|(Oct)|(Nov)|(Dec)/g
+          );
+          if (res !== null) {
+            return res[0];
+          }
+        }
+        // makes two layer object with incrementing month values
+        // for each airport code
+        function fillMonthsClaimsObj(obj, date, airprop) {
+          if (obj.hasOwnProperty(airprop)) {
+            if (obj[airprop].hasOwnProperty(date)) {
+              obj[airprop][date] += 1;
+            } else {
+              obj[airprop][date] = 1;
+            }
+          } else {
+            let filter = /^[a-zA-Z]/g.test(airprop);
+            if (filter) {
+              obj[airprop] = {};
+            }
+          }
+        }
         // calls checkObj to update closeAmountObj close $amounts
         function formatCloseAmount(close, airline) {
           // tempNum replaces all the dollar sign characters and converts it to float num
@@ -85,7 +130,7 @@ myApp.controller("mainController", [
               });
             }
           }
-          // enters graph data takes in sorted chart data
+          // enters graph data into the fusion tempates takes in sorted chart data
           function enterDataSets(graph, dataSheet) {
             for (let i = 0; i < graph.length; i++) {
               dataSheet.categories[0].category.push({
@@ -101,6 +146,7 @@ myApp.controller("mainController", [
           });
           return arr;
         }
+        // data is loaded, tell the dom
         $scope.dataLoaded = true;
       });
   }
