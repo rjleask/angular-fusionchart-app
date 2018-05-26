@@ -10,24 +10,27 @@ myApp.controller("mainController", [
       .success(function(response) {
         console.log(response);
         let data = response.feed.entry;
-        let closeAmountObj = {};
+        let closeAmountObj = {
+          months: {},
+          averages: {}
+        };
 
         for (let i = 0; i < data.length; i++) {
-          let tempArr = [];
-          let tempObj = {};
-
           formatCloseAmount(
             data[i].gsx$closeamount.$t,
             data[i].gsx$airlinename.$t
           );
         }
         // calls checkObj to update closeAmountObj close $amounts
-        function formatCloseAmount(close, airline) {
+        function formatCloseAmount(close, airline, date) {
           // tempNum replaces all the dollar sign characters and converts it to float num
-          let tempNum = parseFloat(close.replace(/\$|,/g, ""));
-          let tempAirline = closeAmountObj;
-          if (tempNum !== NaN && tempNum > 0) {
-            closeCheckObj(tempAirline, airline, tempNum);
+          let closeNum = parseFloat(close.replace(/\$|,/g, ""));
+          let tempDate = matchDate(date);
+          let obj = closeAmountObj;
+          let objMonths = closeAmountObj.months;
+          if (closeNum !== NaN && closeNum > 0) {
+            closeCheckObj(obj, airline, closeNum);
+            fillMonthsCloseObj(objMonths, tempDate, airline, closeNum);
           }
         }
         // checks to see if objProp exists, if it does increment
@@ -40,6 +43,23 @@ myApp.controller("mainController", [
             let filter = /^[a-zA-Z]/g.test(property);
             if (filter) {
               data[property] = num;
+            }
+          }
+        }
+        // helper function for calculating average monthly values
+        // fills closeAmtObj.months with values for each month
+        function fillMonthsCloseObj(obj, date, airline, closeNum) {
+          if (obj.hasOwnProperty(airline)) {
+            if (obj[airline].hasOwnProperty(date)) {
+              obj[airline][date] += closeNum;
+            } else {
+              obj[airline][date] = closeNum;
+            }
+          } else {
+            let filter = /^[a-zA-Z]/g.test(airline);
+            if (filter) {
+              obj[airline] = {};
+              obj[airline][date] = closeNum;
             }
           }
         }
