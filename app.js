@@ -97,7 +97,7 @@ myApp.controller("mainController", [
         }
         // calls checkObj to update closeAmountObj close $amounts
         function formatCloseAmount(close, airline) {
-          // tempNum replaces all the dollar sign characters and converts it to float num
+          // closeNum replaces all the dollar sign characters and converts it to float num
           let closeNum = parseFloat(close.replace(/\$|,/g, ""));
           let tempDate = matchDate(date);
           let obj = closeAmountObj;
@@ -130,22 +130,23 @@ myApp.controller("mainController", [
               });
             }
           }
-          // enters graph data into the fusion tempates takes in sorted chart data
-          function enterDataSets(graph, dataSheet) {
-            for (let i = 0; i < graph.length; i++) {
-              dataSheet.categories[0].category.push({
-                label: graph[i].label
-              });
-              dataSheet.dataset[0].data.push({
-                value: graph[i].value
-              });
-            }
-          }
           arr.sort(function(a, b) {
             return a.value - b.value;
           });
           return arr;
         }
+        // enters graph data into the fusion tempates takes in sorted chart data
+        function enterDataSets(graph, dataSheet) {
+          for (let i = 0; i < graph.length; i++) {
+            dataSheet.categories[0].category.push({
+              label: graph[i].label
+            });
+            dataSheet.dataset[0].data.push({
+              value: graph[i].value
+            });
+          }
+        }
+
         // data is loaded, tell the dom
         $scope.dataLoaded = true;
       });
