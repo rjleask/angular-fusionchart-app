@@ -1,4 +1,16 @@
 var myApp = angular.module("myApp", ["ng-fusioncharts"]);
+myApp.directive("barGraph", function() {
+  return {
+    template:
+      '<fusioncharts id="myChartContainer" width="100%" height="100%" type="errorbar2d" datasource="{{barGraph}}" showDataLoadingMessage="true"></fusioncharts>'
+  };
+});
+myApp.directive("lineGraph", function() {
+  return {
+    template:
+      '<fusioncharts id="myChartContainer" width="100%" height="100%" max-height="800" type="mscombi2d" datasource="{{lineGraph}}" showDataLoadingMessage="true"></fusioncharts>'
+  };
+});
 myApp.controller("mainController", [
   "$scope",
   "$http",

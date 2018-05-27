@@ -12,22 +12,8 @@
         Loading.....
   </div>
   <div ng-if='dataLoaded'>
-    <fusioncharts
-      id="myChartContainer"
-      width="800"
-      height="600"
-      type="mscombi2d" 
-      datasource="{{lineGraph}}" 
-      showDataLoadingMessage="true">
-    </fusioncharts>
-    <fusioncharts 
-    id="myChartContainer" 
-    width="100%" 
-    height="100%" 
-    type="errorbar2d" 
-    datasource="{{barGraph}}" 
-    showDataLoadingMessage="true">
-  </fusioncharts>
+    <bar-graph  ng-if="pressedTab('bar')"></bar-graph>
+    <line-graph ng-if="pressedTab('line')"></line-graph>
   </div>
 
 <script src="app.js"></script>
