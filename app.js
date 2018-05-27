@@ -168,6 +168,30 @@ myApp.controller("mainController", [
             });
           }
         }
+        // takes in current aircode and mean uses helper function to get stdev
+        function getStandardDev(aircode, avgValue) {
+          let tempObj = monthlyClaimsObj.months;
+          let tempDataset;
+          if (tempObj.hasOwnProperty(aircode)) {
+            tempDataset = tempObj[aircode];
+          }
+          return calculateStandardDev(tempDataset, avgValue);
+        }
+        // standard deviation function receives inputs from getStandardDev
+        function calculateStandardDev(dataset, mean) {
+          let totMeanArr = [];
+          let sumMeanArr = 0;
+          let totSampleSize = 0;
+          for (const month in dataset) {
+            let x = Math.pow(dataset[month] - mean, 2);
+            totMeanArr.push(x);
+          }
+          totMeanArr.forEach(function(index) {
+            sumMeanArr += index;
+            totSampleSize++;
+          });
+          return Math.sqrt(sumMeanArr / totSampleSize);
+        }
 
         // data is loaded, tell the dom
         $scope.dataLoaded = true;
