@@ -29,6 +29,27 @@ myApp.controller("mainController", [
             data[i].gsx$datereceived.$t
           );
         }
+        $scope.barGraph = {
+          chart: {
+            caption:
+              "Avg Number Claims Per Month For Each Airport Code 2010-2013",
+            subcaption: "means & stdev's",
+            xaxisname: "Airport Codes",
+            yaxisname: "Avg Claims Per Month",
+            theme: "fint"
+          },
+          categories: [
+            {
+              category: []
+            }
+          ],
+          dataset: [
+            {
+              seriesname: "Daly City Serramonte",
+              data: []
+            }
+          ]
+        };
         $scope.lineGraph = {
           chart: {
             caption: "Net Loss per month for each airline",
