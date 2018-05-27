@@ -56,6 +56,12 @@ myApp.controller("mainController", [
             }
           ]
         };
+        // takes in two monthly claims objs and aircodes then fills averages obj with avg vals
+        getAverageMonthlyVal(
+          monthlyClaimsObj.months,
+          monthlyClaimsObj.averages,
+          "aircode"
+        );
         // formats data and sends it to graph ready objects
         let lineList = closeAmountObj;
         let sortedListLine = sortObject(lineList);
@@ -134,6 +140,22 @@ myApp.controller("mainController", [
             return a.value - b.value;
           });
           return arr;
+        }
+        // fills claims object with avg monthly values per aircode
+        // first iteration grabs the aircodes, second grabs month values
+        function getAverageMonthlyVal(objMonths, objAverages, aircode) {
+          for (let aircode in objMonths) {
+            let tempSampleSize = 0;
+            let tempTotal = 0;
+            for (let month in objMonths[aircode]) {
+              tempSampleSize++;
+              tempTotal += objMonths[aircode][month];
+            }
+            let tempAvg = Math.round(tempTotal / tempSampleSize * 100) / 100;
+            if (tempAvg >= 1) {
+              objAverages[aircode] = tempAvg;
+            }
+          }
         }
         // enters graph data into the fusion tempates takes in sorted chart data
         function enterDataSets(graph, dataSheet) {
