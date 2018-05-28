@@ -131,6 +131,7 @@ myApp.controller("mainController", [
             let filter = /^[a-zA-Z]/g.test(airprop);
             if (filter) {
               obj[airprop] = {};
+              obj[airprop] = 1;
             }
           }
         }
