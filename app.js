@@ -16,6 +16,13 @@ myApp.controller("mainController", [
   "$scope",
   "$http",
   ($scope, $http) => {
+    $scope.tab = "line";
+    $scope.setNewTab = function(newTab) {
+      $scope.tab = newTab;
+    };
+    $scope.pressedTab = function(name) {
+      return $scope.tab === name;
+    };
     $scope.dataLoaded = false;
     $scope.barGraph = {
       chart: {
