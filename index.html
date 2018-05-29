@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Claims Data Charting App</title>
+  <title>Angular Practice</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
   <link rel="stylesheet" href="app.css">
   <link rel="stylesheet" type="text/css" media="screen" href="./fusioncharts/assets/css/style.css" />
 </head>
-<body ng-controller="myController">
+<body ng-controller="mainController">
     <header>
         <nav class="navbar navbar-default">
         <div class="container">
@@ -24,13 +24,16 @@
         </div>
         </nav>
       </header>
-  <div ng-show="dataLoaded===false" ng-hide="dataLoaded===true">
-        Loading.....
-  </div>
-  <div ng-cloak class="graph-box" ng-if='dataLoaded'>
-    <bar-graph  ng-if="pressedTab('bar')"></bar-graph>
-    <line-graph ng-if="pressedTab('line')"></line-graph>
-    <div >
+  <div class="main-container">
+    <div ng-show="dataLoaded===false" ng-hide="dataLoaded===true">
+        <h2 class='load-text'>
+            Loading....<span class="loader-box"><div class="lds-dual-ring"></div></span>
+        </h2>
+    </div>
+    <div ng-cloak class='graph-box' ng-if='dataLoaded'>
+      <bar-graph  ng-if="pressedTab('bar')"></bar-graph>
+      <line-graph ng-if="pressedTab('line')"></line-graph>
+      <div >
         <h2>Enter Claim</h2>
         <form class="form-inline">
             <div class="form-group">
@@ -48,6 +51,7 @@
             <button type="button" ng-click="update(entry)" class="btn btn-primary">Save</button>
         </form>
       </div>
+  </div>
   </div>
   <script src='./fusioncharts/js/fusioncharts.js'></script>
   <script src='./fusioncharts/js/fusioncharts.charts.js'></script>

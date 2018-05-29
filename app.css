@@ -35,6 +35,9 @@
   text-align: center;
   margin:0 auto;
 }
+.load-text:hover{
+  cursor:wait;
+}
 
 /* loader from loader.io */
 .lds-dual-ring {
