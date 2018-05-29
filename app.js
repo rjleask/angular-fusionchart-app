@@ -1,10 +1,12 @@
 var myApp = angular.module("myApp", ["ng-fusioncharts"]);
+// component would be sourced from a component folder with web-server
 myApp.directive("barGraph", function() {
   return {
     template:
       '<fusioncharts id="myChartContainer" width="100%" height="100%" type="errorbar2d" datasource="{{barGraph}}" showDataLoadingMessage="true"></fusioncharts>'
   };
 });
+// component would be sourced from a component folder with web-server
 myApp.directive("lineGraph", function() {
   return {
     template:
@@ -16,6 +18,7 @@ myApp.controller("mainController", [
   "$scope",
   "$http",
   ($scope, $http) => {
+    // tab functionality
     $scope.tab = "line";
     $scope.setNewTab = function(newTab) {
       $scope.tab = newTab;
@@ -23,6 +26,7 @@ myApp.controller("mainController", [
     $scope.pressedTab = function(name) {
       return $scope.tab === name;
     };
+    //  //
     $scope.dataLoaded = false;
     $scope.barGraph = {
       chart: {
@@ -83,6 +87,39 @@ myApp.controller("mainController", [
     let sortedListBar, sortedListLine;
     //// update data dynamically
     $scope.claim = {};
+    // empties current data then updates the data with user input
+    $scope.update = function(entry) {
+      $scope.claim = angular.copy(entry);
+      $scope.lineGraph.dataset[0].data = [];
+      $scope.lineGraph.categories[0].category = [];
+      $scope.barGraph.dataset[0].data = [];
+      $scope.barGraph.categories[0].category = [];
+      countMonthlyClaims($scope.claim.code, $scope.claim.date);
+      formatCloseAmount(
+        $scope.claim.value,
+        $scope.claim.code,
+        $scope.claim.date
+      );
+      getAverageMonthlyVal(
+        monthlyClaimsObj.months,
+        monthlyClaimsObj.averages,
+        "aircode"
+      );
+      getAverageMonthlyVal(
+        closeAmountObj.months,
+        closeAmountObj.averages,
+        "airline"
+      );
+      // formats data and sends it to graph ready objects
+      let barList = monthlyClaimsObj.averages;
+      let lineList = closeAmountObj;
+      sortedListLine = sortObject(lineList, "line");
+      sortedListBar = sortObject(barList, "bar");
+      enterDataSets(sortedListLine, $scope.lineGraph);
+      enterDataSets(sortedListBar, $scope.barGraph);
+      console.log(monthlyClaimsObj, closeAmountObj);
+    };
+    ////
     // get data from spreadsheet
     $http
       .get(
