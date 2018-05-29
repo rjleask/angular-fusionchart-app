@@ -81,6 +81,8 @@ myApp.controller("mainController", [
       averages: {}
     };
     let sortedListBar, sortedListLine;
+    //// update data dynamically
+    $scope.claim = {};
     // get data from spreadsheet
     $http
       .get(
