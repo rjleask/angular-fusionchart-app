@@ -1,0 +1,36 @@
+[ng-cloak],
+[data-ng-cloak],
+[x-ng-cloak],
+.ng-cloak,
+.x- ng-cloak {
+  display: none !important;
+}
+/* nav container */
+.container{
+  background: #5578ff;
+  width:100%;
+  max-width: 100%!important;
+  max-height: 100%;
+}
+/* save button */
+.btn-primary{
+  padding:8px !important;
+}
+.nav>li>a:hover, .nav>li:hover{
+  border:none;
+  background:rgba(169, 196, 238, 0.753);
+  color:black;
+}
+.nav-tabs,.nav-tabs>li>a{
+  border:none;
+  margin-right:1px;
+}
+.graph-box{
+  height: 600px
+}
+.main-container{
+  width:70%;
+  height: 100vh;
+  text-align: center;
+  margin:0 auto;
+}
